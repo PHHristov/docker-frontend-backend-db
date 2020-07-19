@@ -30,7 +30,7 @@ pipeline {
         stage('Build') {
             steps {
                 script{
-                sh "cd ./docker-frontend-backend-db && sudo ./build_images.sh ${BUILD_NUMBER}"
+                sh "cd ./docker-frontend-backend-db && sudo chmod +x build_images.sh && sudo ./build_images.sh ${BUILD_NUMBER}"
                 }
             }
         }
