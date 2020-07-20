@@ -24,7 +24,18 @@ pipeline {
                       aws ecr get-login-password --region eu-west-1  | docker login  --username AWS  --password-stdin 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend
                       aws ecr get-login-password --region eu-west-1  | docker login  --username AWS  --password-stdin 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend'''
                 }
-            }
+
+                }
+        }
+
+        stage('Pull images') {
+            steps {
+                script{
+                sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend:2'
+                sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend:2'
+                }
+
+                }
         }
 
     
