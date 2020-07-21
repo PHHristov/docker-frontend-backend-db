@@ -38,7 +38,7 @@ pipeline {
         stage('test') {
             steps {
                 script{
-                sh "cd ./docker-frontend-backend-db && "
+                sh "cd ./docker-frontend-backend-db && sudo docker-compose down && sudo docker-compose up --build -d"
                 }
             }
         }
