@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-pod
+  labels:
+    app: myapp
+    type: front-end
+
+spec:
+  containers:
+    - name: frontend
+      image: frontend
+      env:
+      - name: API_URL
+        value: "http://api:3001/data"
