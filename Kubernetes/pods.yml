@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+    type: front-end
+
+spec:
+  containers:
+    - name: backend
+      image: postgres:11.2-alpine
+      env:
+      - name: POSTGRES_USER
+        value: "demo_user"
+      - name: POSTGRES_PASSWORD
+        value: "demo_user"
+      - name: POSTGRES_DB
+        value: demo_db
+      volumes:
+      - ./init_sql_scripts/:/docker-entrypoint-initdb.d
