@@ -1,43 +1,52 @@
-pipeline {
-    agent { label ('minikube')  } 
-    stages {
-        
-        stage('Clone git repo') {
-            steps {
-                script{
-                    
-                sh ''' if [ -d "./docker-frontend-backend-db" ] 
-                then cd ./docker-frontend-backend-db && sudo git pull
-
-                else  git clone https://github.com/PHHristov/docker-frontend-backend-db.git
-                fi '''
+    pipeline {
+        agent { label ('minikube')  } 
+        stages {
+            
+            stage('Clone git repo') {
+                steps {
+                    script{
+                        
+                    sh ''' if [ -d "./docker-frontend-backend-db" ] 
+                    then cd ./docker-frontend-backend-db && sudo git pull
+                    else  git clone https://github.com/PHHristov/docker-frontend-backend-db.git
+                    fi '''
+                    }
                 }
             }
-        }
-        
-        stage('AWS ECR Login') {
-            steps {
+            
+            stage('Build') {
+              steps {
                 script{
-                sh '''export AWS_ACCESS_KEY_ID="AKIA36RLNVBTJVDLNLOG"
-                      export AWS_SECRET_ACCESS_KEY="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"
-                      export AWS_DEFAULT_REGION="eu-west-1"
-                      aws ecr get-login-password --region eu-west-1  | docker login  --username AWS  --password-stdin 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend
-                      aws ecr get-login-password --region eu-west-1  | docker login  --username AWS  --password-stdin 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend'''
+                sh "cd ./docker-frontend-backend-db && sudo chmod +x build_images.sh && sudo ./build_images.sh ${BUILD_NUMBER}"
                 }
+              }
+            }
 
-                }
+
+
+
+            stage('Start MiniKube pods') {
+                steps {
+                    script{
+                    sh ' kubectl delete --all pods'
+                    sh ' kubectl delete --all services'
+                    sh 'kubectl create -f ./docker-frontend-backend-db/Kubernetes/backend_pod.yml'
+                    sh 'kubectl create -f ./docker-frontend-backend-db/Kubernetes/db_pod.yml'
+                    sh 'kubectl create -f ./docker-frontend-backend-db/Kubernetes/frontend_pod.yml'
+                    sh 'kubectl create -f ./docker-frontend-backend-db/Kubernetes/service-def.yml'
+                    }
+    // 
+            }
+            }
+            // stage('Pull images') {
+            //     steps {
+            //         script{
+            //         sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend:2'
+            //         sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend:2'
+            //         }
+    // 
+            // }
+            // 
         }
-
-        stage('Pull images') {
-            steps {
-                script{
-                sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend:2'
-                sh 'docker pull 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend:2'
-                }
-
-                }
-        }
-
-    
     }
-}
+    
