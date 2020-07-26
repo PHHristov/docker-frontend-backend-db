@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: backend
-      image: backend
+      image: 821503567974.dkr.ecr.eu-west-1.amazonaws.com/backend
       env:
       - name: CONNECTION_STRING
         value: "postgres://demo_user:demo_user@db/demo_db"

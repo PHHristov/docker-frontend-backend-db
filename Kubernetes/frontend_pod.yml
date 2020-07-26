@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: frontend
-      image: frontend
+      image: 821503567974.dkr.ecr.eu-west-1.amazonaws.com/frontend
       env:
       - name: API_URL
         value: "http://api:3001/data"
