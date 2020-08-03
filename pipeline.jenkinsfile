@@ -42,5 +42,13 @@ pipeline {
                 }
             }
         }
+
+        stage('test') {
+            steps {
+                script{
+                sh "cd ./docker-frontend-backend-db && sudo chmod +x upload_to_ecr.sh && sudo ./upload_to_ecr.sh ${BUILD_NUMBER}"
+                }
+            }
+        }
     }
 }
